@@ -66,7 +66,36 @@ public class TelegramMenuButtons {
     }
 
     public static synchronized void setMainMenuButtons(SendMessage message) {
+        //Create keyboard
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        message.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
 
+        //Create keyboard line list
+        List<KeyboardRow> keyboard = new ArrayList<KeyboardRow>();
+
+        //First keyboard line
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        //Add buttons in new line
+        keyboardFirstRow.add(new KeyboardButton("Розклад"));
+
+        //Add line to list
+        keyboard.add(keyboardFirstRow);
+
+
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        keyboardSecondRow.add(new KeyboardButton("Екзамени"));
+        keyboardSecondRow.add(new KeyboardButton("Заміни"));
+        keyboard.add(keyboardSecondRow);
+
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardThirdRow.add(new KeyboardButton("Інше"));
+        keyboard.add(keyboardThirdRow);
+
+        // Set list on keyboard
+        replyKeyboardMarkup.setKeyboard(keyboard);
     }
 
     public static synchronized void setOtherMenuBottons(SendMessage message) {

@@ -91,7 +91,18 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public synchronized void sendMenuPick(String chatId) {
+        SendMessage sendMessage = new SendMessage();
 
+        sendMessage.enableMarkdown(true);
+        sendMessage.setChatId(chatId);
+        TelegramMenuButtons.setMainMenuButtons(sendMessage);
+        sendMessage.setText("Оберіть наступну дію:");
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            Logger log = null;
+            log.log(Level.SEVERE, "Exception: ", e.toString());
+        }
     }
 
     public synchronized void sendOtherPick(String chatId) {

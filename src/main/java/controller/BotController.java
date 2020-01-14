@@ -1,8 +1,6 @@
 package controller;
 import model.Timetable;
-import model.database.ILesson;
-import model.database.IUser;
-import model.database.SQLiteJDBC;
+import model.database.*;
 import view.Bot;
 
 import java.util.regex.Matcher;
@@ -18,8 +16,9 @@ public class BotController {
     public BotController(Bot view) {
         this.view = view;
         //dataBase = SQLiteJDBC.getInstance();
-        userDataBase = SQLiteJDBC.getInstance();
-        lessonDataBase = SQLiteJDBC.getInstance();
+        userDataBase = H2JDBC.getInstance();
+        //lessonDataBase = SQLiteJDBC.getInstance();
+        lessonDataBase = new LessonDataBase();
     }
 
     public void commandHandler(String chatId, String command) {
@@ -64,7 +63,7 @@ public class BotController {
         }
 
         //Main menu
-        if(command.equals("Расписание")) {
+        if(command.equals("Розклад")) {
             System.out.println("Группа: " + userDataBase.readUser(chatId));
             String tibeTable = lessonDataBase.readLesson(userDataBase.readUser(chatId),null);
             view.sendTimeTable(chatId, tibeTable);

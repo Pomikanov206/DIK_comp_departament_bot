@@ -2,15 +2,15 @@ package model.database;
 
 import java.sql.*;
 
-public class SQLiteJDBC implements IUser, ILesson{
-    private static SQLiteJDBC instance = null;
+public class H2JDBC implements IUser{
+    private static H2JDBC instance = null;
     private Connection c = null;
     private Statement stmt = null;
 
-    private SQLiteJDBC(){
+    private H2JDBC(){
         try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:kit_bit_test.db");
+            Class.forName("org.h2.Driver");
+            c = DriverManager.getConnection("jdbc:h2:mem:kit_bit_test");
             stmt = c.createStatement();
         } catch (Exception e) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -18,37 +18,17 @@ public class SQLiteJDBC implements IUser, ILesson{
         }
     }
 
-    public static SQLiteJDBC getInstance(){
+    public static H2JDBC getInstance(){
         if(instance == null)
-            instance = new SQLiteJDBC();
+            instance = new H2JDBC();
         return instance;
-    }
-
-    public void createLesson(){
-
-    }
-
-    public String readLesson(String groupName, String day){
-        if(groupName.equals("КС-19-2/11"))
-            return "Расписание для КС-19-2/11";
-        else if (groupName.equals("КС-17-1"))
-            return "Расписание для КС-17-1";
-        return "Неизвестная группа";
-    }
-
-    public void updateLesson(){
-
-    }
-
-    public void deleteLesson(){
-
     }
 
     private void createUserTable(){
         try {
             stmt.execute("CREATE TABLE IF NOT EXISTS users" +
-                    "(CHAT_ID TEXT  PRIMARY KEY     NOT NULL" +
-                    ", GROUP_NAME TEXT     NOT NULL);");
+                    "(CHAT_ID Int  PRIMARY KEY" +
+                    ", GROUP_NAME VARCHAR(255));");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,7 +38,7 @@ public class SQLiteJDBC implements IUser, ILesson{
     public void addUser(String chatId, String group) {
         createUserTable();
         try {
-            stmt.execute("INSERT OR REPLACE INTO users " +
+            stmt.execute("INSERT INTO users " +
                     "(CHAT_ID,GROUP_NAME) " +
                     "VALUES (\'" + chatId + "\', \'" + group + "\');");
         } catch (SQLException e) {
